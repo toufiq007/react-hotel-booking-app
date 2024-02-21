@@ -7,6 +7,7 @@ import { validationResult } from "express-validator";
 
 const router = express.Router();
 
+// registration route
 router.post(
   "/register",
   [
@@ -18,6 +19,18 @@ router.post(
     }),
   ],
   userController.userRegister
+);
+
+// login route
+router.post(
+  "/login",
+  [
+    check("email", "Email is requried!!").isEmail(),
+    check("password", "Password should be 6 or more character").isLength({
+      min: 6,
+    }),
+  ],
+  userController.userLogin
 );
 
 export default router;
