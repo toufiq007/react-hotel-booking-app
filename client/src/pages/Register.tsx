@@ -1,8 +1,9 @@
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import Error from "../components/Error";
-
-type RegisterFormData = {
+import { useMutation } from "react-query";
+import * as apiClient from "../api-client";
+export type RegisterFormData = {
   firstName: string;
   lastName: string;
   email: string;
@@ -17,7 +18,20 @@ const Register = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<RegisterFormData>();
+
+  // using react query
+  // using muation for handling post request
+  const mutation = useMutation(apiClient.register, {
+    onSuccess: () => {
+      console.log("Registerd Successfull");
+    },
+    onError: (error: Error) => {
+      console.log(error.message);
+    },
+  });
+
   const onSubmit = handleSubmit((data) => {
+    mutation.mutate(data);
     console.log(data);
   });
   //   console.log(errors);
@@ -100,8 +114,8 @@ const Register = () => {
                 validate: (val) => {
                   if (!val) {
                     return "This field is required!!";
-                  } else if (watch("password") !== val){
-                     return "Password do not matched"
+                  } else if (watch("password") !== val) {
+                    return "Password do not matched";
                   }
                 },
               })}
